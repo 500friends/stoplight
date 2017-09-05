@@ -19,7 +19,7 @@ module Stoplight
       end
 
       def get_all(light)
-        synchronize { [get_failures(light), get_state(light)] }
+        synchronize { [@failures[light.name], @states[light.name]] }
       end
 
       def get_failures(light)
@@ -29,8 +29,8 @@ module Stoplight
       def record_failure(light, failure)
         synchronize do
           n = light.threshold - 1
-          @failures[light.name] = get_failures(light).first(n).unshift(failure)
-          @failures[light.name].size
+          @failures[light.name] = @failures[light.name].first(n)
+          @failures[light.name].unshift(failure).size
         end
       end
 

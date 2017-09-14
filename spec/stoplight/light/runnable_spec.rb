@@ -211,10 +211,25 @@ RSpec.describe Stoplight::Light::Runnable do
         expect(subject.run).to eql(code_result)
       end
 
-      it 'notifies when transitioning to green' do
-        expect(io.string).to eql('')
-        subject.run
-        expect(io.string).to_not eql('')
+      context 'when switching to green' do
+        it 'notifies' do
+          expect(io.string).to eql('')
+          subject.run
+          expect(io.string).to_not eql('')
+        end
+      end
+
+      context 'when switching to red' do
+        let(:code_result) { raise error}
+
+        it 'notifies' do
+          expect(io.string).to eql('')
+          begin
+            subject.run
+          rescue error.class
+          end
+          expect(io.string).to_not eql('')
+        end
       end
     end
 
